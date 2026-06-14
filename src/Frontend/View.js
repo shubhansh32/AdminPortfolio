@@ -4,27 +4,38 @@ import axios from "axios";
 function View() {
   const [project, setProject] = useState([]);
 
+  // GET ALL PROJECTS
   useEffect(() => {
     axios
-      .get("http://localhost:5001/project")
+      .get("https://adminportfolio-6swc.onrender.com/api/project")
       .then((res) => {
         console.log("API Response:", res.data);
-        setProject(res.data.Projects);
+
+        // ✅ SAFE HANDLING (fixes all backend key issues)
+        const data =
+          res.data.projects ||
+          res.data.Projects ||
+          res.data.Project ||
+          res.data;
+
+        setProject(Array.isArray(data) ? data : []);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Fetch error:", err);
       });
   }, []);
 
-  // 👇 Delete function
+  // DELETE PROJECT
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/api/project/${id}`);
+      const res = await axios.delete(
+        `https://adminportfolio-6swc.onrender.com/api/project/${id}`
+      );
 
-      // remove deleted item from UI
-      setProject((prev) => prev.filter((item) => item._id !== id));
-
-      console.log("Deleted successfully");
+      if (res.data?.success !== false) {
+        setProject((prev) => prev.filter((item) => item._id !== id));
+        console.log("Deleted successfully");
+      }
     } catch (err) {
       console.log("Delete error:", err);
     }
@@ -45,15 +56,13 @@ function View() {
               <strong>Image Name:</strong> {item.image}
             </p>
 
+            {/* IMAGE */}
             <img
-              src={`http://localhost:5001/uploads/${item.image}`}
+              src={`https://adminportfolio-6swc.onrender.com/uploads/${item.image}`}
               alt={item.title}
               width="250"
               onError={(e) => {
-                console.log(
-                  "Image failed:",
-                  `http://localhost:5001/uploads/${item.image}`
-                );
+                e.target.src = "https://via.placeholder.com/250";
               }}
             />
 
@@ -69,11 +78,16 @@ function View() {
               Live Demo
             </a>
 
-            {/* 👇 Delete Button */}
             <br />
+
+            {/* DELETE BUTTON */}
             <button
               onClick={() => handleDelete(item._id)}
-              style={{ color: "white", background: "red", marginTop: "10px" }}
+              style={{
+                color: "white",
+                background: "red",
+                marginTop: "10px",
+              }}
             >
               Delete
             </button>
