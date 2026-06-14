@@ -1,27 +1,28 @@
-const dotenv=require("dotenv");
+const dotenv = require("dotenv");
 const express = require("express");
-const projectRoutes=require("./Backend/Routes/ProjectRoutes");
-const cors=require("cors");
-const path=require("path");
+const cors = require("cors");
+const path = require("path");
 
 dotenv.config();
 
-const connectdb=require("./Backend/config/db");
+const PORT = process.env.PORT || 5001;
 
+const connectdb = require("./Backend/config/db");
 connectdb();
 
-const app=express();
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// routes
 app.use("/image", require("./Backend/Routes/imageRoutes"));
-app.use("/api/project", projectRoutes);
-app.use("/project",require("./Backend/Routes/ViewRoutes"));
+app.use("/api/project", require("./Backend/Routes/ProjectRoutes")); // ✅ ONLY ONE
+app.use("/project", require("./Backend/Routes/ViewRoutes"));
+
+// static
 app.use("/uploads", express.static(path.join(__dirname, "Backend/uploads")));
-app.use("/api/project", require("./Backend/Routes/DeleteRoutes"));
 
-
-app.listen(5001, () => {
-  console.log("Server Running");
+app.listen(PORT, () => {
+  console.log("Server running on", PORT);
 });
