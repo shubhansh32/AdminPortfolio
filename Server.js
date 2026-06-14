@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 // routes
-app.use("/image", require("./Backend/Routes/imageRoutes"));
+app.use("/image", require("./Backend/Routes/ImageRoutes"));
 app.use("/api/project", require("./Backend/Routes/ProjectRoutes")); // ✅ ONLY ONE
 app.use("/project", require("./Backend/Routes/ViewRoutes"));
 
