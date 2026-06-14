@@ -1,6 +1,7 @@
 const Project=require("../Model/ProjectModel");
 const { postProject } = require("./ProjectController");
 const {updateProject}=require("./UpdateController");
+const { getProject } = require("./ViewController");
 
 const deleteProject=async(req,res)=>{
     try{
@@ -27,4 +28,5 @@ module.exports={
     postProject,
     deleteProject,
     updateProject,
+    getProject,
 };
