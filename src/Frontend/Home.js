@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "./Home.css";
 
 function Home() {
   const [form, setForm] = useState({
@@ -9,9 +10,9 @@ function Home() {
     github: "",
     live: "",
   });
-  
-  const [image,setImage]=useState(null);
-  const navigate=useNavigate();
+
+  const [image, setImage] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,7 +20,6 @@ function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
 
     const formData = new FormData();
 
@@ -30,68 +30,88 @@ function Home() {
     formData.append("live", form.live);
 
     try {
-      await axios.post("http://localhost:5001/api/project", formData);
-      alert("Project Added");
+      await axios.post(
+        "https://adminportfolio-6swc.onrender.com/api/project",
+        formData
+      );
 
-      // optional: reset form
+      alert("Project Added Successfully");
+
       setForm({
         title: "",
         description: "",
         github: "",
         live: "",
       });
-    }catch (error) {
-  console.log(error.response?.data || error.message);
-}
+
+      setImage(null);
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    }
   };
 
   return (
-    <div>
-    <form onSubmit={handleSubmit}>
-      <input
-        name="title"
-        value={form.title}
-        onChange={handleChange}
-        placeholder="Title"
-      />
+    <div className="home-container">
+      <div className="form-card">
+        <h1>Add Project</h1>
 
-         <input
-          type="file"
-          onChange={(e) => setImage(e.target.files[0])}
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            placeholder="Project Title"
+            required
+          />
 
-     
+          <input
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
+            required
+          />
 
-      <input
-        name="description"
-        value={form.description}
-        onChange={handleChange}
-        placeholder="Description"
-      />
+          <textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            placeholder="Project Description"
+            rows="5"
+            required
+          />
 
-      <input
-        name="github"
-        value={form.github}
-        onChange={handleChange}
-        placeholder="GitHub"
-      />
+          <input
+            type="text"
+            name="github"
+            value={form.github}
+            onChange={handleChange}
+            placeholder="GitHub URL"
+            required
+          />
 
-      <input
-        name="live"
-        value={form.live}
-        onChange={handleChange}
-        placeholder="Live"
-      />
+          <input
+            type="text"
+            name="live"
+            value={form.live}
+            onChange={handleChange}
+            placeholder="Live Demo URL"
+            required
+          />
 
-      <button type="submit">Save</button>
-    </form>
+          <button type="submit" className="save-btn">
+            Save Project
+          </button>
+        </form>
 
-    <button onClick={()=>navigate("/view")}>View</button>
-
+        <button
+          className="view-btn"
+          onClick={() => navigate("/view")}
+        >
+          View Projects
+        </button>
+      </div>
     </div>
-    
   );
-
 }
 
 export default Home;
