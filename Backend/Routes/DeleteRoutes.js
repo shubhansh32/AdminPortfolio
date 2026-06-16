@@ -6,6 +6,7 @@ const upload=require("../Middleware/upload");
 const{
     postProject,
     deleteProject,
+    getProject,
 }=require("../Controllers/DeleteController");
 
 router.post("/", upload.single("image"), postProject);

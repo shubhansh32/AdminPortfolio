@@ -7,7 +7,7 @@ const {
   postProject,
   deleteProject,
   updateProject,
-  getProjects,
+  getProject,
 } = require("../Controllers/DeleteController");
 
 router.get("/test", (req, res) => {
